@@ -3,6 +3,8 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+*/migrations/
+
 # C extensions
 *.so
 
@@ -58,8 +60,6 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
 
 # Flask stuff:
 instance/
@@ -205,3 +205,4 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+prod_db.sqlite3
