@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="flex justify-center">
+    <form mehtod="POST" action="{% url 'register' %}">
+        <h1 class="text-3xl">Register to track your expenses</h1>
+        <div class="flex flex-wrap gap-x-8 my-8">
+            <div class="flex flex-col gap-2 my-4">
+                <label class="text-md">first name</label>
+                <input type="text" name="firstname" placeholder="First name" autofocus required class="input-field">
+                <ul class="text-md text-red-600">
+                    <li>error message1</li>
+                    <li>error message1</li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-2 my-4">
+                <label class="text-md">last name</label>
+                <input type="text" name="lastname" placeholder="Last name" required class="input-field">
+                <ul class="text-md text-red-600">
+                    <li>error message1</li>
+                    <li>error message1</li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-2 my-4">
+                <label class="text-md">email id</label>
+                <input type="email" name="email" placeholder="example@mail.com" required class="input-field">
+                <ul class="text-md text-red-600">
+                    <li>error message1</li>
+                    <li>error message1</li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-x-8 my-8">
+            <div class="flex flex-col gap-2 my-4">
+                <label class="text-md">password</label>
+                <input type="password" name="password" placeholder="Example#123" required class="input-field">
+                <ul class="text-md text-red-600">
+                    <li>error message1</li>
+                    <li>error message1</li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-2 my-4">
+                <label class="text-md">confirm password</label>
+                <input type="password" name="confirm_password" placeholder="Example#123" required class="input-field">
+                <ul class="text-md text-red-600">
+                    <li>error message1</li>
+                    <li>error message1</li>
+                </ul>
+            </div>
+        </div>
+        <button class="btn prm-btn">submit</button>
+    </form>
+</section>
+{% endblock content %}
