@@ -6,6 +6,8 @@ from .model_forms import MyLoginForm
 
 @login_required(login_url='login')
 def dashboard(request):
+    messages.success(request, "Sample success MEssage.")
+    messages.error(request, "Sample Error MEssage, jsut a random test message.")
     return render(request, 'dashboard/index.html')
 
 def transactions(request):

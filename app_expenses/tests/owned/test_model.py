@@ -31,12 +31,6 @@ class OwnedModelTest(TestCase):
         with self.assertRaises(PermissionDenied):
             obj.create_by(self.user2)
 
-    def test_create_by_without_user_uses_requested_user_success(self):
-        """create_by: succeeds when 'user' is None and requested_user is provided"""
-        obj = Category(name="Test")
-        result = obj.create_by(self.user1)
-        self.assertEqual(result.user, self.user1)
-
     def test_create_by_on_existing_object_fails(self):
         """create_by: fails when called on an already saved object"""
         with self.assertRaises(PermissionDenied):

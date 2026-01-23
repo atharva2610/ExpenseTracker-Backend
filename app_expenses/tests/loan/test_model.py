@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError, PermissionDenied
-from app_expenses.models import Loan, LoanType, Currency
+from app_expenses.models import Loan, Currency
 from datetime import date
 
 User = get_user_model()

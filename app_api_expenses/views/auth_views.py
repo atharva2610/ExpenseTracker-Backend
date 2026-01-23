@@ -7,7 +7,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from ..serializers.auth_serializers import *
 from app_expenses.services.auth_service.user_login_service import authenticate_by_email
 
-
 class LoginAPIView(APIView):
     def post(self, request):
         email = request.data.get('email')
