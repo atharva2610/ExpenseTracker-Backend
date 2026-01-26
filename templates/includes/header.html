@@ -1,0 +1,27 @@
+<header class="bg-white sticky top-0 min-h-16 h-16 flex justify-between items-center px-4 border-b border-gray-300">
+    {% if request.user.is_authenticated %}
+    <div class="md:invisible flex items-center gap-2">
+        <button onclick="openNavbar()" class="md:hidden leading-none text-slate-600 duration-300 ease-in hover:rotate-45 cursor-pointer">
+            <span class="material-symbols-rounded">menu</span>
+        </button>
+        <strong class="text-xl text-pink-600">Expense Tracker</strong>
+    </div>
+    {% else %}
+    <strong class="text-xl text-pink-600">Expense Tracker</strong>
+    {% endif %}
+
+    <div>
+        {% if request.user.is_authenticated %}
+        <a href="{% url "logout" %}">
+            <span class="material-symbols-rounded">logout</span>
+        </a>
+        {% else %}
+        <a href="{% url "login" %}">
+            <button class="px-4 py-2 border-2 border-pink-600 outline-none text-md text-white bg-pink-600 rounded-lg">Login</button>
+        </a>
+        <a href="{% url "register" %}">
+            <button class="px-4 py-2 border-2 border-pink-600 outline-none text-md text-pink-600 rounded-lg">Register</button>
+        </a>
+        {% endif %}
+    </div>
+</header>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block Content %}
+<section class="p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="my-4 text-xl text-slate-950">Transactions</h3>
+        <a href="{% url 'create_transaction' %}" class="flex items-center p-x2 py-1 text-pink-600 rounded-lg border border-pink-600 leading-none">
+            <span class="material-symbols-rounded">add</span>
+            <span class="text-lg font-semibold">Add New</span>
+        </a>
+    </div>
+
+    <div class="flex items-center gap-4 my-4">
+        <span class="flex-1 text-lg">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center gap-1 text-slate-950">
+            <span class="material-symbols-rounded">chevron_left</span>
+            <span class="text-md">Previous</span>
+        </a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="flex items-center gap-1 text-slate-950">
+            <span class="text-md">Next</span>
+            <span class="material-symbols-rounded">chevron_right</span>
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-4">
+        {% for trx in page_obj %}
+        <div class="p-4 rounded-lg border border-gray-300">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">{{trx.date}}</span>
+                {% if trx.type == "credit" %}
+                <div class="flex items-center leading-none text-green-600">
+                    <span class="material-symbols-rounded">south</span>
+                    <strong class="text-xl">{{trx.fund_account.currency.symbol}} {{trx.amount}}</strong>
+                </div>
+                {% else %}
+                <div class="flex items-center leading-none text-red-600">
+                    <span class="material-symbols-rounded">north</span>
+                    <strong class="text-xl">{{trx.fund_account.currency.symbol}} {{trx.amount}}</strong>
+                </div>
+                {% endif %}
+            </div>
+            <h2 class="text-2xl my-6">{{trx.description}}</h2>
+            <div class="flex items-center gap-2 mb-2 text-slate-600">
+                <span class="material-symbols-rounded scale-85">account_balance</span>
+                <span class="text-md">{{trx.fund_account.name}}</span>
+            </div>
+            <div class="flex items-center gap-2 mb-2 text-slate-600">
+                <span class="material-symbols-rounded scale-85">category</span>
+                <span class="text-md">{{trx.category.name}}</span>
+            </div>
+            <div class="flex items-center gap-2 mb-2 text-slate-600">
+                <span class="material-symbols-rounded scale-85">tag</span>
+                {% for tag in trx.tags.all %}
+                <span class="text-md">{{tag.name}} / </span>
+                {% endfor %}
+            </div>
+
+            <div class="flex justify-end items-center gap-4 text-slate-400 leading-none">
+                <a href="">
+                    <abbr title="Transactions">
+                        <span class="material-symbols-rounded hover:text-slate-950">swap_vert</span>
+                    </abbr>
+                </a>
+                <a href="{% url 'update_transaction' trx.id %}">
+                    <abbr title="Edit">
+                        <span class="material-symbols-rounded hover:text-slate-950">edit</span>
+                    </abbr>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock Content %}
