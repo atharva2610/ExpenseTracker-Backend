@@ -1,0 +1,19 @@
+<div class="absolute top-4 z-50 w-screen flex flex-col items-center">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+        <div class="bg-white w-screen max-w-md my-2 flex border-2 border-green-600 rounded-xl">
+            <p class="flex-1 p-2 text-md font-semibold text-green-600 border-r-2 border-green-600">{{message.message}} {{message.tags}}</p>
+            <button class="border-none outline-none p-2 text-center text-green-600 hover:text-green-950 cursor-pointer" onclick="closeMessagePopUp(this)">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        {% else %}
+        <div class="bg-white w-screen max-w-md my-2 flex border-2 border-red-600 rounded-xl">
+            <p class="flex-1 p-2 text-md font-semibold text-red-600 border-r-2 border-red-600">{{message.message}}</p>
+            <button class="border-none outline-none p-2 text-center text-red-600 hover:text-red-950 cursor-pointer" onclick="closeMessagePopUp(this)">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
