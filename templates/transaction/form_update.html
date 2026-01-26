@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block Content %}
+<section class="p-4 h-full flex justify-center">
+    <form method="POST" action="" class="flex flex-col items-center gap-4">
+        {% csrf_token %}
+        <h1 class="text-3xl my-8">Update Transaction</h1>
+
+        {% comment %} ---- FUND ACCOUNT ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Fund Account</label>
+            <select id="fund_account" name="fund_account" class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600">
+                {% for fund_account in fund_account_list %}
+                <option value="{{fund_account.id}}" {%if fund_account.id == trx.fund_account.id %}selected{% endif %}>{{fund_account.name}}</option>
+                {% endfor %}
+            </select>
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                    {% if field == 'fund_account' %}
+                        {% for err in field_errors %}
+                        <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% comment %} ---- AMOUNT ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Amount</label>
+            <input type="number" id="amount" name="amount" value={{trx.amount}} step="0.01" placeholder="ex. 123.45" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                    {% if field == 'amount' %}
+                        {% for err in field_errors %}
+                        <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% comment %} ---- DATE ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Date</label>
+            <input type="date" id="date" name="date" value={{trx.date|date:'Y-m-d'}} placeholder="ex. 2000-11-14" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                    {% if field == 'date' %}
+                        {% for err in field_errors %}
+                        <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% comment %} ---- CATEGORY ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Category</label>
+            <select id="category" name="category" class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600">
+                {% for category in category_list %}
+                <option value="{{category.id}}" {% if category.id == trx.category.id %}selected{% endif %}>{{category.name}}</option>
+                {% endfor %}
+            </select>
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                    {% if field == 'category' %}
+                        {% for err in field_errors %}
+                        <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        {% comment %} ---- TYPE ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Type</label>
+            <select id="type" name="type" value={trx.value} class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600">
+                {% for value, text in trx_type %}
+                <option value="{{value}}">{{text}}</option>
+                {% endfor %}
+            </select>
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                    {% if field == 'type' %}
+                        {% for err in field_errors %}
+                        <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% comment %} ---- TAGS ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Tags</label>
+            {% comment %} ---- Search Box ---- {% endcomment %}
+            <input 
+                type="text" 
+                id="tags" 
+                placeholder="Search tags..."
+                class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none"
+                oninput="filterTags(this.value)"
+            >
+            {% comment %} ---- Tag CheckBox ---- {% endcomment %}
+            <div id="tagDropdown" class="border rounded-lg mt-2 max-w-sm max-h-48 overflow-y-auto">
+                {% for tag in tag_list %}
+                <label class="flex items-center gap-2 p-2 hover:bg-pink-50 cursor-pointer">
+                    <input type="checkbox" name="tags" value="{{ tag.id }}" {% if tag in trx.tags.all %}checked{% endif %}>
+                    <span>{{ tag.name }}</span>
+                </label>
+                {% endfor %}
+            </div>
+
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                {% if field == 'tags' %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{ err }}</span>
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% comment %} ---- DESCRIPTION ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-md">Description</label>
+            <input type="text" id="description" name="description" value={{trx.description}} placeholder="ex. Gifts" class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% if errors %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field, field_errors in errors %}
+                    {% if field == 'description' %}
+                        {% for err in field_errors %}
+                        <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <button class="w-screen max-w-sm p-3 rounded-lg bg-pink-600 text-lg text-white cursor-pointer hover:bg-pink-600" type="submit">Submit</button>
+    </form>
+</section>
+{% endblock Content %}
+
+{% block Scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for field, field_errors in errors %}
+            var fieldId = "{{ field }}";
+            var el = document.getElementById(fieldId);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                el.focus();
+                return;  // stop after first error
+            }
+        {% endfor %}
+    });
+
+
+
+    function filterTags(query) {
+        query = query.toLowerCase();
+        document.querySelectorAll('#tagDropdown label').forEach(label => {
+            const text = label.textContent.toLowerCase();
+            label.style.display = text.includes(query) ? '' : 'none';
+        });
+    }
+</script>
+{% endblock Scripts %}
