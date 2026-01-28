@@ -43,7 +43,7 @@ def form_proccessing(request):
 @login_required(login_url='login')
 def transactions(request):
     trx_list = Transaction.get_for_user(requested_user=request.user)
-    paginator = Paginator(trx_list, 2)
+    paginator = Paginator(trx_list, 25)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'transaction/index.html', {'page_obj': page_obj})
