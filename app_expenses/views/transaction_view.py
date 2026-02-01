@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
+from django.db.models import Sum
 from ..models import Transaction, TransactionType, Tag
 from ..utilities import get_fund_account_list, get_category_list, get_tag_list, get_fund_account_by_id, get_category_by_id, get_tag_by_id
 
@@ -41,12 +42,16 @@ def form_proccessing(request):
     return (trx, valid_tags)
 
 @login_required(login_url='login')
-def transactions(request):
+def transactions(request, fund_acct_id=None):
     trx_list = Transaction.get_for_user(requested_user=request.user)
-    paginator = Paginator(trx_list, 2)
+    if fund_acct_id:
+        trx_list = trx_list.filter(fund_account__id=fund_acct_id)
+    total_credit = trx_list.filter(type='credit').aggregate(total_credit=Sum('amount'))
+    total_debit = trx_list.filter(type='debit').aggregate(total_debit=Sum('amount'))
+    paginator = Paginator(trx_list, 25)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'transaction/index.html', {'page_obj': page_obj})
+    return render(request, 'transaction/index.html', {'page_obj': page_obj, **total_credit, **total_debit})
 
 @login_required(login_url='login')
 def create_transaction(request):
