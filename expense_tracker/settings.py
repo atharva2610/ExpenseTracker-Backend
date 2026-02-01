@@ -1,10 +1,6 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-from urllib.parse import urlparse, parse_qsl
-# Load .env file
-load_dotenv()
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

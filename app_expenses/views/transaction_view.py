@@ -42,16 +42,12 @@ def form_proccessing(request):
     return (trx, valid_tags)
 
 @login_required(login_url='login')
-def transactions(request, fund_acct_id=None):
+def transactions(request):
     trx_list = Transaction.get_for_user(requested_user=request.user)
-    if fund_acct_id:
-        trx_list = trx_list.filter(fund_account__id=fund_acct_id)
-    total_credit = trx_list.filter(type='credit').aggregate(total_credit=Sum('amount'))
-    total_debit = trx_list.filter(type='debit').aggregate(total_debit=Sum('amount'))
-    paginator = Paginator(trx_list, 25)
+    paginator = Paginator(trx_list, 2)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'transaction/index.html', {'page_obj': page_obj, **total_credit, **total_debit})
+    return render(request, 'transaction/index.html', {'page_obj': page_obj})
 
 @login_required(login_url='login')
 def create_transaction(request):
