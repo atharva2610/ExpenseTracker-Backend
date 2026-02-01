@@ -1,5 +1,6 @@
 from functools import wraps
 from django.db import transaction as db_transaction
+from django.core.exceptions import ValidationError
 
 def balance_updater(func):
     """
@@ -39,6 +40,9 @@ def balance_updater(func):
                         latest_fund_acct.balance -= old_trx.amount
                     elif old_trx.type == "debit":
                         latest_fund_acct.balance += old_trx.amount
+
+            if latest_fund_acct.balance < trx.amount:
+                raise ValidationError({'amount': 'Insufficient Balance'})
 
             # Apply new balance
             if trx.type == "credit":

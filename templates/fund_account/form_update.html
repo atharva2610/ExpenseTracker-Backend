@@ -26,7 +26,7 @@
         {% comment %} ---- field container ---- {% endcomment %}
         <div class="flex flex-col gap-2">
             <label class="font-semibold text-md">Balance</label>
-            <input type="number" name="balance" value="{{fund_account.balance}}" placeholder="ex. 1" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            <input type="number" name="balance" step="0.01" value="{{fund_account.balance}}" placeholder="ex. 1" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
             {% if errors %}
             <div class="flex flex-col gap-2 my-1">
                     {% for field, field_errors in errors %}

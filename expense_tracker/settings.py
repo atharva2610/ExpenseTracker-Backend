@@ -1,14 +1,23 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from urllib.parse import urlparse, parse_qsl
 
+# Load .env file
+load_dotenv()
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv('DEBUG').upper() == 'TRUE'
+DEBUG = bool(os.getenv('DEBUG'))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.onrender.com']
+
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,8 +29,12 @@ INSTALLED_APPS = [
     'app_expenses'
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append('whitenoise.runserver_nostatic')
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -96,5 +109,20 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # project-level static folder
+    BASE_DIR / 'static',  # for 'collect static' command
 ]
+
+STATIC_ROOT = BASE_DIR / 'static_root'
+STATIC_ROOT.mkdir(exist_ok=True, parents=True)
+
+STORAGES = {"staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"}}
+
+#HTTPS settings
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE =True
+SECURE_SSL_REDIRECT = True
+
+#HSTS settings
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True

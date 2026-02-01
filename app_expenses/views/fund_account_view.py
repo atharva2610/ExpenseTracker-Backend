@@ -18,10 +18,10 @@ def create_fund_account(request):
             data = {}
             for field in ('name', 'balance', 'currency'):
                 data[field] = request.POST.get(field)
-                data['currency'] = get_currency_by_id(data['currency'])
-                fund_acct = FundAccount(user=request.user, name=data['name'], balance=data['balance'], currency=data['currency'])
-                fund_acct = fund_acct.create_by(requested_user=request.user)
-                messages.success(request, 'Fund Account added successfully!!!')
+            data['currency'] = get_currency_by_id(data['currency'])
+            fund_acct = FundAccount(user=request.user, name=data['name'], balance=data['balance'], currency=data['currency'])
+            fund_acct = fund_acct.create_by(requested_user=request.user)
+            messages.success(request, 'Fund Account added successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
         print("VALIDATION ERROR:")
