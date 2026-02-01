@@ -32,7 +32,7 @@ class Report(OwnedModel):
     
     @property
     def month_year(self):
-        return f"{calendar.month_name[self.month]} {self.year}"
+        return f"{calendar.month_name[self.month]}, {self.year}"
     
     def clean(self):
         super().clean()
@@ -42,16 +42,12 @@ class Report(OwnedModel):
         # validate year
         if not self.year:
             raise ValidationError({"year": "Year is required."})
-        # if self.year < 2000:
-        #     raise ValidationError({"year": "Year must be >= 2000."})
-        # if self.year > today().year:
-        #     raise ValidationError({"year": "Year cannot be in the future."})
         # validate month
         if not self.month:
             raise ValidationError({"month": "Month is required."})
         # validate uniqueness
         if Report.objects.filter(user=self.user, year=self.year, month=self.month).exclude(pk=self.pk).exists():
-            raise ValidationError({"month_year": f"Report with Month Year: '{self.month_year}' already exists."})
+            raise ValidationError({"month": f"Report with Month Year: '{self.month_year}' already exists."})
 
     def __str__(self):
         return f"{self.user} - {self.month_year}"

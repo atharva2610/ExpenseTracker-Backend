@@ -8,7 +8,7 @@ from ..models import Tag
 @login_required(login_url='login')
 def tags(request):
     tags_list = Tag.get_for_user(requested_user=request.user)
-    return render(request, 'Tag/index.html', {'tags_list': tags_list})
+    return render(request, 'tag/index.html', {'tags_list': tags_list})
 
 @login_required(login_url='login')
 def create_tag(request):
