@@ -11,7 +11,7 @@
     </div>
 
     <div class="flex items-center gap-4 my-4">
-        <span class="flex-1 text-lg">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <span class="flex-1 text-lg">{{page_obj|length}} Transactions | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
         
         {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center gap-1 text-slate-950">
@@ -26,6 +26,17 @@
             <span class="material-symbols-rounded">chevron_right</span>
         </a>
         {% endif %}
+    </div>
+
+    <div class="flex my-4">
+        <div class="p-2">
+            <span class="text-sm text-slate-600">Total Credit</span>
+            <h4 class="text-lg text-green-600">{{total_credit}}</h4>
+        </div>
+        <div class="p-2">
+            <span class="text-sm text-slate-600">Total Debit</span>
+            <h4 class="text-lg text-red-600">{{total_debit}}</h4>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-4">
