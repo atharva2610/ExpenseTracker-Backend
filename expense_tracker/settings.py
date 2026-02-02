@@ -2,19 +2,29 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from urllib.parse import urlparse, parse_qsl
 
 # Load .env file
 load_dotenv()
-
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv('DEBUG').upper() == 'TRUE'
+DEBUG = bool(os.getenv('DEBUG'))
 
+<<<<<<< HEAD
 CORS_ALLOWED_ORIGINS = os.environ.get('ALLOWED_CORS').split(",")
 
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS').split(",")
+=======
+ALLOWED_HOSTS = ['.onrender.com']
+
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
+>>>>>>> main
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,15 +39,21 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+<<<<<<< HEAD
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+=======
+if DEBUG:
+    INSTALLED_APPS.append('whitenoise.runserver_nostatic')
+>>>>>>> main
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,10 +81,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'expense_tracker.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
     }
 }
 
@@ -97,6 +125,7 @@ USE_I18N = True
 USE_TZ = True
 
 
+<<<<<<< HEAD
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
@@ -112,3 +141,26 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(minutes=2),
 }
+=======
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # for 'collect static' command
+]
+
+STATIC_ROOT = BASE_DIR / 'static_root'
+STATIC_ROOT.mkdir(exist_ok=True, parents=True)
+
+if not DEBUG:
+    STORAGES = {"staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"}}
+
+    #HTTPS settings
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE =True
+    SECURE_SSL_REDIRECT = True
+
+    #HSTS settings
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+>>>>>>> main

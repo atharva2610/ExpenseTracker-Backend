@@ -1,0 +1,37 @@
+{% if request.user.is_authenticated %}
+<aside class="hidden absolute top-0 z-20 h-screen bg-white md:relative md:block w-screen md:w-64 max-w-xs border-r border-gray-300">
+    <div class="h-16 flex items-center p-4 gap-2 border-b border-gray-300">
+        <button onclick="closeNavbar()" class="md:hidden leading-none text-slate-600 duration-300 ease-in hover:rotate-45 cursor-pointer">
+            <span class="material-symbols-rounded">close</span>
+        </button>
+        <strong class="text-xl text-pink-600">Expense Tracker</strong>
+    </div>
+    
+    <nav class="flex flex-col gap-2 px-4 my-4">
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-2 my-4 text-slate-950 hover:text-slate-400 active:text-pink-600">
+            <span class="material-symbols-rounded">dashboard</span>
+            <span class="text-lg">Dashboard</span>
+        </a>
+        <a href="{% url 'transactions' %}" class="flex items-center gap-2 my-4 text-slate-950 hover:text-slate-400 active:text-pink-600">
+            <span class="material-symbols-rounded">swap_vert</span>
+            <span class="text-lg">Transactions</span>
+        </a>
+        <a href="{% url 'fund_accounts' %}" class="flex items-center gap-2 my-4 text-slate-950 hover:text-slate-400 active:text-pink-600">
+            <span class="material-symbols-rounded">account_balance</span>
+            <span class="text-lg">Fund Accounts</span>
+        </a>
+        <a href="{% url 'categories' %}" class="flex items-center gap-2 my-4 text-slate-950 hover:text-slate-400 active:text-pink-600">
+            <span class="material-symbols-rounded">category</span>
+            <span class="text-lg">Categories</span>
+        </a>
+        <a href="{% url 'tags' %}" class="flex items-center gap-2 my-4 text-slate-950 hover:text-slate-400 active:text-pink-600">
+            <span class="material-symbols-rounded">tag</span>
+            <span class="text-lg">Tags</span>
+        </a>
+        <a href="{% url 'report' %}" class="flex items-center gap-2 my-4 text-slate-950 hover:text-slate-400 active:text-pink-600">
+            <span class="material-symbols-rounded">text_snippet</span>
+            <span class="text-lg">Report</span>
+        </a>
+    </nav>
+</aside>
+{% endif %}

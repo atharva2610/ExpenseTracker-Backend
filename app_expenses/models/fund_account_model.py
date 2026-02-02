@@ -41,4 +41,4 @@ class FundAccount(OwnedModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.id
+        return self.name

@@ -1,3 +1,39 @@
 {% extends "base.html" %}
 
+<<<<<<< HEAD
 {% block content %}<h1>category</h1>{% endblock content %}
+=======
+{% block Content %}
+<section class="p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="my-4 text-xl text-slate-950">Categories</h3>
+        <a href="{% url 'create_category' %}" class="p-1 text-pink-600 rounded-lg border border-pink-600 leading-none">
+            <abbr title="New Category">
+                <span class="material-symbols-rounded">add</span>
+            </abbr>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {% for category in categories_list %}
+        <div class="p-4 rounded-lg border border-gray-300">
+            <h3 class="mb-4 text-xl font-semibold text-slate-950">{{category.name}}</h3>
+                        
+            <div class="flex justify-end items-center gap-4 text-slate-400 leading-none">
+                <a href="">
+                    <abbr title="Transactions">
+                        <span class="material-symbols-rounded hover:text-slate-950">swap_vert</span>
+                    </abbr>
+                </a>
+                <a href="{% url 'update_category' category.id %}">
+                    <abbr title="Edit">
+                        <span class="material-symbols-rounded hover:text-slate-950">edit</span>
+                    </abbr>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock Content %}
+>>>>>>> main
