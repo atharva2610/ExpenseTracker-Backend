@@ -11,15 +11,13 @@
             <label class="text-md">email id</label>
             <input type="email" name="email" placeholder="example@mail.com" autofocus required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
             {% comment %} ---- field errors ---- {% endcomment %}
-            {% if errors %}
+            {% if form.errors.email %}
             <div class="flex flex-col gap-2 my-1">
-                    {% for field, field_errors in errors %}
-                        {% if field == 'email' %}
-                            {% for err in field_errors %}
-                            <span class="font-semibold text-sm text-red-600">{{err}}</span>
-                            {% endfor %}
-                        {% endif %}
+                {% for field_errors in form.errors.as_data.email %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{err}}</span>
                     {% endfor %}
+                {% endfor %}
             </div>
             {% endif %}
         </div>
@@ -29,22 +27,20 @@
             <label class="text-md">password</label>
             <input type="password" name="password" placeholder="Example#123" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
             {% comment %} ---- field errors ---- {% endcomment %}
-            {% if errors %}
+            {% if form.errors.password %}
             <div class="flex flex-col gap-2 my-1">
-                    {% for field, field_errors in errors %}
-                        {% if field == 'password' %}
-                            {% for err in field_errors %}
-                            <span class="font-semibold text-sm text-red-600">{{err}}</span>
-                            {% endfor %}
-                        {% endif %}
+                {% for field_errors in form.errors.as_data.password %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{err}}</span>
                     {% endfor %}
+                {% endfor %}
             </div>
             {% endif %}
         </div>
 
         <button class="w-screen max-w-sm p-3 rounded-lg bg-pink-600 text-lg text-white cursor-pointer hover:bg-pink-700" type="submit">Log me in</button>
         
-        <p class="text-md">Forget password? Let's create <a href="{% url 'register' %}" traget"_blank" class="text-pink-600 font-extrabold underline">new password</a>
+        <p class="text-md">Don't have an account? Let's get <a href="{% url 'register' %}" target="_blank" class="text-pink-600 font-extrabold underline">registered</a>
     </form>
 </section>
 {% endblock Content %}

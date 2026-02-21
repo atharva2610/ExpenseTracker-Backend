@@ -2,6 +2,10 @@ import io
 import csv
 from .models import Currency, FundAccount, Category, Tag
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+
+def email_exists(email):
+    return get_user_model().objects.filter(email=email).exists()
 
 def get_currency_list():
     return Currency.objects.all()
