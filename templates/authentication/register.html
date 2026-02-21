@@ -1,54 +1,78 @@
 {% extends "base.html" %}
 
 {% block Content %}
-<section class="flex justify-center">
-    <form mehtod="POST" action="{% url 'register' %}">
-        <h1 class="text-3xl">Register to track your expenses</h1>
-        <div class="flex flex-wrap gap-x-8 my-8">
-            <div class="flex flex-col gap-2 my-4">
-                <label class="text-md">first name</label>
-                <input type="text" name="firstname" placeholder="First name" autofocus required class="input-field">
-                <ul class="text-md text-red-600">
-                    <li>error message1</li>
-                    <li>error message1</li>
-                </ul>
+<section class="p-4 flex justify-center">
+    <form method="POST" action="{% url 'register' %}" class="flex flex-col items-center gap-4">
+        {% csrf_token %}
+        <h1 class="text-3xl my-8">Register to track your expenses</h1>
+
+        {% comment %} ---- field contianer ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="text-md">email id</label>
+            <input type="email" name="email" placeholder="example@mail.com" autofocus required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% comment %} ---- field errors ---- {% endcomment %}
+            {% if form.errors.as_data.email %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field_errors in form.errors.as_data.email %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                    {% endfor %}
+                {% endfor %}
             </div>
-            <div class="flex flex-col gap-2 my-4">
-                <label class="text-md">last name</label>
-                <input type="text" name="lastname" placeholder="Last name" required class="input-field">
-                <ul class="text-md text-red-600">
-                    <li>error message1</li>
-                    <li>error message1</li>
-                </ul>
-            </div>
-            <div class="flex flex-col gap-2 my-4">
-                <label class="text-md">email id</label>
-                <input type="email" name="email" placeholder="example@mail.com" required class="input-field">
-                <ul class="text-md text-red-600">
-                    <li>error message1</li>
-                    <li>error message1</li>
-                </ul>
-            </div>
+            {% endif %}
         </div>
-        <div class="flex flex-wrap gap-x-8 my-8">
-            <div class="flex flex-col gap-2 my-4">
-                <label class="text-md">password</label>
-                <input type="password" name="password" placeholder="Example#123" required class="input-field">
-                <ul class="text-md text-red-600">
-                    <li>error message1</li>
-                    <li>error message1</li>
-                </ul>
+
+        {% comment %} ---- field contianer ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="text-md">username</label>
+            <input type="text" name="username" placeholder="example_user" autofocus required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% comment %} ---- field errors ---- {% endcomment %}
+            {% if form.errors.as_data.username %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field_errors in form.errors.as_data.username %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                    {% endfor %}
+                {% endfor %}
             </div>
-            <div class="flex flex-col gap-2 my-4">
-                <label class="text-md">confirm password</label>
-                <input type="password" name="confirm_password" placeholder="Example#123" required class="input-field">
-                <ul class="text-md text-red-600">
-                    <li>error message1</li>
-                    <li>error message1</li>
-                </ul>
-            </div>
+            {% endif %}
         </div>
-        <button class="btn prm-btn">submit</button>
+
+        {% comment %} ---- field container ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="text-md">password</label>
+            <input type="password" name="password" placeholder="Example#123" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% comment %} ---- field errors ---- {% endcomment %}
+            {% if form.errors.as_data.password %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field_errors in form.errors.as_data.password %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% comment %} ---- field container ---- {% endcomment %}
+        <div class="flex flex-col gap-2">
+            <label class="text-md">confirm password</label>
+            <input type="password" name="confirm_password" placeholder="confirm password" required class="w-screen max-w-sm p-3 rounded-lg border-2 border-stone-300 text-lg focus:ring-2 focus:ring-pink-600 outline-none">
+            {% comment %} ---- field errors ---- {% endcomment %}
+            {% if form.errors.as_data.confirm_password %}
+            <div class="flex flex-col gap-2 my-1">
+                {% for field_errors in form.errors.as_data.confirm_password %}
+                    {% for err in field_errors %}
+                    <span class="font-semibold text-sm text-red-600">{{err}}</span>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <button class="w-screen max-w-sm p-3 rounded-lg bg-pink-600 text-lg text-white cursor-pointer hover:bg-pink-700" type="submit">Register me</button>
+        
+        <p class="text-md">Already have an account? <a href="{% url 'login' %}" class="text-pink-600 font-extrabold underline">Login here</a>
     </form>
 </section>
 {% endblock Content %}
