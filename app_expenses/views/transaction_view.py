@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
-from django.db.models import Sum
 from ..models import Transaction, TransactionType, Tag
 from ..utilities import get_fund_account_list, get_category_list, get_tag_list, get_fund_account_by_id, get_category_by_id, get_tag_by_id
+from ..services import user_transactions
 
-def get_common_context():
+def get_form_common_context():
     context = {
         'fund_account_list': get_fund_account_list(),
         'category_list': get_category_list(),
@@ -15,6 +15,12 @@ def get_common_context():
         'trx_type': TransactionType.choices
     }
     return context
+
+def paginated_transaction_list(request, trx_list):
+    paginator = Paginator(trx_list, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return page_obj
 
 def form_proccessing(request):
     data = {}
@@ -42,17 +48,54 @@ def form_proccessing(request):
     return (trx, valid_tags)
 
 @login_required(login_url='login')
-def transactions(request):
-    trx_list = Transaction.get_for_user(requested_user=request.user)
-    paginator = Paginator(trx_list, 25)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'transaction/index.html', {'page_obj': page_obj})
+def transactions(request): 
+    context = {}
+    try:
+        trx_list = user_transactions.get_all_transactions(requested_user=request.user)
+        context['total_credit'], context['total_debit'] = user_transactions.get_credit_debit_summary(trx_list)
+        context['page_obj'] = paginated_transaction_list(request, trx_list)
+    except ValidationError as ve:
+        context['errors'] = ve
+    except Exception as e:
+        messages.error(request, str(e))
+    return render(request, 'transaction/index.html', context)
+
+@login_required(login_url='login')
+def transactions_by_fund_account(request, fund_acct_id):
+    context = {}
+    try:
+        returned_data = user_transactions.get_transactions_by_fund_account(requested_user=request.user, fund_account_id=fund_acct_id)
+        trx_list = returned_data[0]
+        context['selected_fund_account'] = returned_data[1]
+        context['total_credit'] = returned_data[2]
+        context['total_debit'] = returned_data[3]
+        context['page_obj'] = paginated_transaction_list(request, trx_list)
+    except ValidationError as ve:
+        context['errors'] = ve
+    except Exception as e:
+        messages.error(request, str(e))
+    return render(request, 'transaction/index.html', context)
+
+@login_required(login_url='login')
+def transactions_by_category(request, category_id):
+    context = {}
+    try:
+        returned_data = user_transactions.get_transactions_by_category(requested_user=request.user, category_id=category_id)
+        trx_list = returned_data[0]
+        context['selected_category'] = returned_data[1]
+        context['total_credit'] = returned_data[2]
+        context['total_debit'] = returned_data[3]
+        context['page_obj'] = paginated_transaction_list(request, trx_list)
+    except ValidationError as ve:
+        context['errors'] = ve
+    except Exception as e:
+        messages.error(request, str(e))
+    return render(request, 'transaction/index.html', context)
 
 @login_required(login_url='login')
 def create_transaction(request):
     try:
-        context = get_common_context()
+        context = get_form_common_context()
         if request.POST:
             trx, valid_tags = form_proccessing(request)
             trx.user = request.user
@@ -61,21 +104,15 @@ def create_transaction(request):
             messages.success(request, 'Transaction added successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
-        print("VALIDATION ERROR:")
-        print(ve)
-        print("-"*20)
     except Exception as e:
         messages.error(request, str(e))
-        print("EXECPTION:")
-        print(e)
-        print("-"*20)
     return render(request, 'transaction/form_create.html', context)
 
 @login_required(login_url='login')
 def update_transaction(request, id):
     try:
-        context = get_common_context()
-        context['trx'] = Transaction.get_for_user(requested_user=request.user, id=id)
+        context = get_form_common_context()
+        context['trx'] = user_transactions.get_transaction_by_id(requested_user=request.user, id=id)
         if request.POST:
             trx, valid_tags = form_proccessing(request)
             context['trx'].amount = trx.amount
@@ -89,12 +126,6 @@ def update_transaction(request, id):
             messages.success(request, 'Transaction updated successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
-        print("VALIDATION ERROR:")
-        print(ve)
-        print("-"*20)
     except Exception as e:
         messages.error(request, str(e))
-        print("EXECPTION:")
-        print(e)
-        print("-"*20)
     return render(request, 'transaction/form_update.html', context)

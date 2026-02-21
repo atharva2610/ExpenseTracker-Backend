@@ -4,7 +4,7 @@
 <section class="p-4">
     <div class="flex justify-between items-center mb-4">
         <h3 class="my-4 text-xl text-slate-950">Transactions</h3>
-        <a href="{% url 'create_transaction' %}" class="flex items-center p-x2 py-1 text-pink-600 rounded-lg border border-pink-600 leading-none">
+        <a href="{% url 'create_transaction' %}" class="flex items-center px-2 py-1 text-pink-600 rounded-lg border border-pink-600 leading-none">
             <span class="material-symbols-rounded">add</span>
             <span class="text-lg font-semibold">Add New</span>
         </a>
@@ -28,14 +28,30 @@
         {% endif %}
     </div>
 
-    <div class="flex my-4">
-        <div class="p-2">
-            <span class="text-sm text-slate-600">Total Credit</span>
-            <h4 class="text-lg text-green-600">{{total_credit}}</h4>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-y-4 my-8">
+        {% if selected_fund_account %}
+        <div class="text-center">
+            <span class="text-sm text-slate-600">Fund Account</span>
+            <h4 class="text-lg font-semibold">{{selected_fund_account.name}}</h4>
         </div>
-        <div class="p-2">
+        <div class="text-center">
+            <span class="text-sm text-slate-600">Balance</span>
+            <h4 class="text-lg font-bold">{{selected_fund_account.balance}}</h4>
+        </div>
+        {% endif %}
+        {% if selected_category %}
+        <div class="text-center">
+            <span class="text-sm text-slate-600">Category</span>
+            <h4 class="text-lg font-semibold">{{selected_category.name}}</h4>
+        </div>
+        {% endif %}
+        <div class="text-center">
+            <span class="text-sm text-slate-600">Total Credit</span>
+            <h4 class="text-lg text-green-600 font-semibold">{{total_credit|default:"0.00"|floatformat:2}}</h4>
+        </div>
+        <div class="text-center">
             <span class="text-sm text-slate-600">Total Debit</span>
-            <h4 class="text-lg text-red-600">{{total_debit}}</h4>
+            <h4 class="text-lg text-red-600 font-semibold">{{total_debit|default:"0.00"|floatformat:2}}</h4>
         </div>
     </div>
 

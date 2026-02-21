@@ -41,13 +41,12 @@ def balance_updater(func):
                     elif old_trx.type == "debit":
                         latest_fund_acct.balance += old_trx.amount
 
-            if latest_fund_acct.balance < trx.amount:
-                raise ValidationError({'amount': 'Insufficient Balance'})
-
             # Apply new balance
             if trx.type == "credit":
                 latest_fund_acct.balance += trx.amount
             elif trx.type == "debit":
+                if latest_fund_acct.balance < trx.amount:
+                    raise ValidationError({'amount': 'Insufficient Balance'})
                 latest_fund_acct.balance -= trx.amount
             latest_fund_acct.save(update_fields=["balance"])
             return trx
