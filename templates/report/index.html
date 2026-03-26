@@ -50,7 +50,7 @@
                     <td class="border border-gray-300 p-2">{{record.total_credit}}</td>
                     <td class="border border-gray-300 p-2">{{record.total_debit}}</td>
                     <td class="border border-gray-300 p-2">{{record.net_balance}}</td>
-                    {% if not record.is_dirty %}
+                    {% if record.is_dirty %}
                     <td class="border border-gray-300 p-2 text-red-600 leading-none text-center"><span class="material-symbols-rounded">cancel</span></td>
                     <td class="border border-gray-300 p-2 text-pink-600 font-semibold underline"><a href="{% url 'update_report' record.id %}">update</a></td>
                     {% else %}

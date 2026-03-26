@@ -112,7 +112,7 @@ def create_transaction(request):
 def update_transaction(request, id):
     try:
         context = get_form_common_context()
-        context['trx'] = user_transactions.get_transaction_by_id(requested_user=request.user, id=id)
+        context['trx'] = user_transactions.get_transaction_by_id(requested_user=request.user, trx_id=id)
         if request.POST:
             trx, valid_tags = form_proccessing(request)
             context['trx'].amount = trx.amount

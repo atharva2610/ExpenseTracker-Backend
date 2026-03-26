@@ -20,14 +20,8 @@ def create_category(request):
             messages.success(request, 'Category added successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
-        print("VALIDATION ERROR:")
-        print(ve)
-        print("----------------------------")
     except Exception as e:
         messages.error(request, str(e))
-        print("EXECPTION:")
-        print(e)
-        print("----------------------------")
     return render(request, 'category/form_create.html', context)
 
 @login_required(login_url='login')
@@ -42,12 +36,6 @@ def update_category(request, id):
             messages.success(request, 'Category updated successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
-        print("VALIDATION ERROR:")
-        print(ve)
-        print("----------------------------")
     except Exception as e:
         messages.error(request, str(e))
-        print("EXECPTION:")
-        print(e)
-        print("----------------------------")
     return render(request, 'category/form_update.html', context)

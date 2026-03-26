@@ -24,14 +24,8 @@ def create_fund_account(request):
             messages.success(request, 'Fund Account added successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
-        print("VALIDATION ERROR:")
-        print(ve)
-        print("----------------------------")
     except Exception as e:
         messages.error(request, str(e))
-        print("EXECPTION:")
-        print(e)
-        print("----------------------------")
     return render(request, 'fund_account/form_create.html', context)
 
 @login_required(login_url='login')
@@ -49,12 +43,6 @@ def update_fund_account(request, id):
             messages.success(request, 'Fund Account updated successfully!!!')
     except ValidationError as ve:
         context['errors'] = ve
-        print("VALIDATION ERROR:")
-        print(ve)
-        print("----------------------------")
     except Exception as e:
         messages.error(request, str(e))
-        print("EXECPTION:")
-        print(e)
-        print("----------------------------")
     return render(request, 'fund_account/form_update.html', context)
